@@ -3,7 +3,7 @@
   <!-- nave bar -->
   <nav class="navbar navbar-expand-lg navbar-light bg-light">
     <div class="container-fluid">
-      <a class="navbar-brand" href="/">My ToDo</a>
+      <a class="navbar-brand" href="/">Update ToDo</a>
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
         aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
@@ -44,59 +44,23 @@
 
   <!-- Forms -->
   <div class="container">
-    <form action="/" method="POST">
-      <h2>Add ToDo</h2>
+    <form action="/update/{{todo.sno}}" method="POST">
+      <h2>Update ToDo</h2>
       <div class="mb-3">
         <label for="exampleInputEmail1" class="form-label">ToDo Title</label>
-        <input type="text" name="title" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
+        <input type="text" name="title" class="form-control" id="exampleInputEmail1" value="{{todo.title}}" aria-describedby="emailHelp">
         <!-- <div id="emailHelp" class="form-text">We'll never share your email with anyone else. </div> -->
       </div>
       <div class="mb-3">
         <label for="exampleInputPassword1" class="form-label">ToDo Description</label>
-        <input type="text" name="desc" class="form-control" id="exampleInputPassword1">
+        <input type="text" name="desc" value="{{todo.desc}}" class="form-control" id="exampleInputPassword1">
       </div>
       <!-- <div class="mb-3 form-check">
         <input type="checkbox" class="form-check-input" id="exampleCheck1">
         <label class="form-check-label" for="exampleCheck1">Check me out</label>
       </div> -->
-      <button type="submit" class="btn btn-primary">Submit</button>
+      <button type="submit" class="btn btn-primary">Update</button>
     </form>
-  </div>
-
-  <!-- Table -->
-  <div class="container my-5">
-    {% if allToDo|length == 0%}
-    <div class="alert alert-info" role="alert">
-      No ToDo's Added Yet!
-    </div>
-    {% else %}
-    <table class="table">
-      <h2>Your ToDo</h2>
-      <thead>
-        <tr>
-          <th scope="col">S No.</th>
-          <th scope="col">Title</th>
-          <th scope="col">Description</th>
-          <th scope="col">Date/Time</th>
-          <th scope="col">Actions</th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for todo in allToDo %}
-        <tr>
-          <th scope="row">{{ loop.index }}</th>
-          <td>{{ todo.title }}</td>
-          <td>{{ todo.desc }}</td>
-          <td>{{ todo.date_created }}</td>
-          <td>
-            <a href="/update/{{ todo.sno}}" class="btn btn-sm btn-primary">Update</a>
-            <a href="/delete/{{ todo.sno}}" class="btn btn-sm btn-danger">Delete</a>
-          </td>
-        </tr>
-        {% endfor %}
-      </tbody>
-    </table>
-    {% endif %}
   </div>
 
   <!-- Optional JavaScript; choose one of the two! -->

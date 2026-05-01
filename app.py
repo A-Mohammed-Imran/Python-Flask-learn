@@ -1,8 +1,8 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, request, redirect, url_for
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
 
-app = Flask(__name__)
+app = Flask(__name__, instance_relative_config=True)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///todo.db'
 db = SQLAlchemy(app)
 
@@ -15,11 +15,16 @@ class Todo(db.Model):
     def __repr__(self) -> str:
         return f"{self.sno} - {self.desc}"
 
-@app.route("/")
+@app.route('/', methods=['GET', 'POST'])
 def home():
-    todo = Todo(title="First Task", desc="This is the first task.")
-    db.session.add(todo)
-    db.session.commit()
+    if request.method == "POST":
+        title = request.form['title']
+        desc = request.form['desc']
+        todo = Todo(title=title, desc=desc)
+        db.session.add(todo)
+        db.session.commit()
+
+        return redirect(url_for('home'))
     todos = Todo.query.all()
     return render_template("index.html", allToDo=todos)
 
@@ -32,6 +37,29 @@ def show():
     todos = Todo.query.all()
     print(todos)
     return "This is show page!"
+
+@app.route("/update/<int:sno>", methods=['GET', 'POST'])
+def update(sno):
+    if request.method == "POST":
+        title = request.form['title']
+        desc = request.form['desc']
+        todo = Todo.query.filter_by(sno=sno).first()
+        todo.title = title
+        todo.desc = desc
+        db.session.add(todo)
+        db.session.commit()
+        return redirect(url_for('home'))
+
+    todo = Todo.query.filter_by(sno=sno).first()    
+    return render_template("update.html", todo=todo)
+    
+
+@app.route("/delete/<int:sno>")
+def delete(sno):
+    todo = Todo.query.filter_by(sno=sno).first()
+    db.session.delete(todo)
+    db.session.commit()
+    return redirect(url_for('home'))
 
 if __name__ == "__main__":
     app.run(debug=True)
